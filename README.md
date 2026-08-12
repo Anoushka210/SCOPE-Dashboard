@@ -16,6 +16,13 @@ SCOPE (Strategic Crime Observation & Prediction Engine) is an end-to-end multi-s
 
 ---
 
+## 🌐 Live Deployed Application
+
+- **Streamlit Community Cloud**: [https://scope-dashboard.streamlit.app/](https://scope-dashboard.streamlit.app/)
+- **GitHub Repository**: [https://github.com/Anoushka210/SCOPE-Dashboard](https://github.com/Anoushka210/SCOPE-Dashboard)
+
+---
+
 ## 🤖 Machine Learning Model Performance & Confusion Matrix
 
 The winning LightGBM model was evaluated on a time-based test split ($\ge$ 2024, 267,015 test events):
@@ -85,12 +92,6 @@ The winning LightGBM model was evaluated on a time-based test split ($\ge$ 2024,
    docker-compose up --build
    ```
 2. Access dashboard at `http://localhost:8501`.
-
----
-
-## 🌐 Deployed Application
-
-- **Streamlit Cloud Deployment**: `[INSERT_DEPLOYED_STREAMLIT_URL_HERE]`
 
 ---
 
