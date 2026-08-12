@@ -18,7 +18,7 @@ SCOPE (Strategic Crime Observation & Prediction Engine) is an end-to-end multi-s
 
 ## 🌐 Live Deployed Application
 
-- **Streamlit Community Cloud**: [https://scope-dashboard.streamlit.app/](https://scope-dashboard.streamlit.app/)
+- **Streamlit Community Cloud**: [https://scope-dashboard-210.streamlit.app/](https://scope-dashboard-210.streamlit.app/)
 - **GitHub Repository**: [https://github.com/Anoushka210/SCOPE-Dashboard](https://github.com/Anoushka210/SCOPE-Dashboard)
 
 ---
