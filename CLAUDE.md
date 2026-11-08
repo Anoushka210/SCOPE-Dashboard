@@ -4,7 +4,9 @@
 **Name:** SCOPE-Dashboard (Strategic Crime Observation & Prediction Engine)  
 **Type:** Capstone project — global crime pattern analysis and prediction dashboard  
 **Owner:** Anoushka (B.Tech final year)  
-**Status:** FastAPI + React migration complete. Leakage audit and honest retraining complete.
+**Status:** LIVE — Deployed to Render (Backend) and Vercel (Frontend)  
+**Live Backend (Render):** https://scope-dashboard.onrender.com  
+**Live Frontend (Vercel):** https://scope-dashboard-kappa.vercel.app  
 
 ---
 
