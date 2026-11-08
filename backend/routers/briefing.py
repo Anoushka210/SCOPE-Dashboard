@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Query, Body
 from pydantic import BaseModel, Field
 from typing import Optional, Dict, Any
 import pandas as pd
-from backend.state import app_state
+from state import app_state
 from utils.ai_summary import generate_threat_narrative
 
 router = APIRouter(prefix="/api", tags=["briefing"])

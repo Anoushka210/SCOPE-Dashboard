@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Query
 from typing import Optional, List, Dict, Any
 import pandas as pd
-from backend.state import app_state
+from state import app_state
 from utils.forecasting import forecast_incidents
 
 router = APIRouter(prefix="/api", tags=["forecast"])

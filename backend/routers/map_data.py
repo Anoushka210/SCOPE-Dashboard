@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Query, Response
 from typing import Optional, List, Dict, Any
 import numpy as np
 import pandas as pd
-from backend.state import app_state
+from state import app_state
 
 router = APIRouter(prefix="/api", tags=["map-data"])
 

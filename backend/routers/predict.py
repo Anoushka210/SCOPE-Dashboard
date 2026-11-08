@@ -3,7 +3,7 @@ from pydantic import BaseModel, Field
 from typing import Optional, List, Dict, Any
 import numpy as np
 import shap
-from backend.state import app_state
+from state import app_state
 from utils.feature_engineering import encode_single_input
 
 router = APIRouter(prefix="/api", tags=["predict"])

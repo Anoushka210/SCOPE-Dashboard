@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Query
 from typing import Optional, List, Dict, Any
-from backend.state import app_state
+from state import app_state
 from utils.network_graph import build_actor_network
 
 router = APIRouter(prefix="/api", tags=["network"])

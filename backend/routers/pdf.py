@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from fastapi import APIRouter, HTTPException, Query, Response
 from typing import Optional
-from backend.state import app_state
+from state import app_state
 from utils.ai_summary import generate_threat_narrative
 from utils.pdf_generator import create_pdf_briefing
 

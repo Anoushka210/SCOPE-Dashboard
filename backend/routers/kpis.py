@@ -4,7 +4,7 @@ from pathlib import Path
 from fastapi import APIRouter, HTTPException, Query
 from typing import Optional
 import pandas as pd
-from backend.state import app_state
+from state import app_state
 
 router = APIRouter(prefix="/api", tags=["kpis"])
 

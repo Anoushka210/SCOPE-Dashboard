@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from backend.state import app_state
+from state import app_state
 
 router = APIRouter(prefix="/api", tags=["filters"])
 

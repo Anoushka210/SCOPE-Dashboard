@@ -14,8 +14,8 @@ ROOT_DIR = Path(__file__).resolve().parent.parent
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
-from backend.state import app_state
-from backend.routers import filters, kpis, map_data, predict, forecast, network, briefing, pdf
+from state import app_state
+from routers import filters, kpis, map_data, predict, forecast, network, briefing, pdf
 
 def get_process_memory_mb() -> float:
     """Return current process peak resident memory in Megabytes."""
