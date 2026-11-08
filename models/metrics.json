@@ -3,197 +3,198 @@
   "cutoff_year": 2024,
   "train_samples": 919937,
   "test_samples": 267015,
+  "leakage_status": "REMOVED - Trained strictly on pre-incident operational indicators (fatalities, nkill, nwound, and EVENTS removed)",
   "critical_class_summary": {
     "test_support": 26946,
-    "precision": 0.9265,
-    "recall": 0.7981,
-    "f1": 0.8575,
-    "assessment": "Critical-class events achieve high precision (92.65%) and strong recall (79.81%) across 26,946 test samples. Medium and High classes show lower recall (50-61%) due to boundary overlap."
+    "precision": 0.4357,
+    "recall": 0.6988,
+    "f1": 0.5367,
+    "assessment": "Leakage-free evaluation across 267,015 held-out test events (2024+). Macro F1: 0.4861."
   },
   "models": {
     "RandomForest": {
-      "accuracy": 0.7448,
-      "macro_f1": 0.6939,
+      "accuracy": 0.6124,
+      "macro_f1": 0.4651,
       "per_class_f1": [
-        0.8327,
-        0.4933,
-        0.6134,
-        0.8363
+        0.7908,
+        0.2895,
+        0.281,
+        0.4989
       ],
       "per_class_metrics": {
         "Low (0)": {
-          "precision": 0.8035,
-          "recall": 0.8641,
-          "f1": 0.8327,
+          "precision": 0.7839,
+          "recall": 0.7978,
+          "f1": 0.7908,
           "support": 155450
         },
         "Medium (1)": {
-          "precision": 0.514,
-          "recall": 0.4743,
-          "f1": 0.4933,
+          "precision": 0.3657,
+          "recall": 0.2396,
+          "f1": 0.2895,
           "support": 49256
         },
         "High (2)": {
-          "precision": 0.636,
-          "recall": 0.5924,
-          "f1": 0.6134,
+          "precision": 0.3168,
+          "recall": 0.2525,
+          "f1": 0.281,
           "support": 35363
         },
         "Critical (3)": {
-          "precision": 0.9435,
-          "recall": 0.751,
-          "f1": 0.8363,
+          "precision": 0.3885,
+          "recall": 0.6971,
+          "f1": 0.4989,
           "support": 26946
         }
       },
       "confusion_matrix": [
         [
-          134329,
-          16593,
-          4118,
-          410
+          124016,
+          12955,
+          6766,
+          11713
         ],
         [
-          21985,
-          23362,
-          3641,
-          268
+          22263,
+          11803,
+          7777,
+          7413
         ],
         [
-          9137,
-          4744,
-          20948,
-          534
+          9763,
+          6227,
+          8930,
+          10443
         ],
         [
-          1724,
-          755,
-          4231,
-          20236
+          2153,
+          1293,
+          4716,
+          18784
         ]
       ]
     },
     "XGBoost": {
-      "accuracy": 0.771,
-      "macro_f1": 0.7151,
+      "accuracy": 0.5994,
+      "macro_f1": 0.4811,
       "per_class_f1": [
-        0.8561,
-        0.5372,
-        0.6146,
-        0.8525
+        0.7737,
+        0.302,
+        0.3162,
+        0.5326
       ],
       "per_class_metrics": {
         "Low (0)": {
-          "precision": 0.8188,
-          "recall": 0.897,
-          "f1": 0.8561,
+          "precision": 0.8057,
+          "recall": 0.7442,
+          "f1": 0.7737,
           "support": 155450
         },
         "Medium (1)": {
-          "precision": 0.589,
-          "recall": 0.4938,
-          "f1": 0.5372,
+          "precision": 0.3342,
+          "recall": 0.2754,
+          "f1": 0.302,
           "support": 49256
         },
         "High (2)": {
-          "precision": 0.6416,
-          "recall": 0.5897,
-          "f1": 0.6146,
+          "precision": 0.3083,
+          "recall": 0.3245,
+          "f1": 0.3162,
           "support": 35363
         },
         "Critical (3)": {
-          "precision": 0.9272,
-          "recall": 0.7889,
-          "f1": 0.8525,
+          "precision": 0.4236,
+          "recall": 0.7171,
+          "f1": 0.5326,
           "support": 26946
         }
       },
       "confusion_matrix": [
         [
-          139438,
-          11188,
-          4427,
-          397
+          115690,
+          19618,
+          10257,
+          9885
         ],
         [
-          20592,
-          24324,
-          4094,
-          246
+          18625,
+          13564,
+          10486,
+          6581
         ],
         [
-          8362,
-          5120,
-          20855,
-          1026
+          7697,
+          6358,
+          11476,
+          9832
         ],
         [
-          1894,
-          666,
-          3129,
-          21257
+          1577,
+          1042,
+          5004,
+          19323
         ]
       ]
     },
     "LightGBM": {
-      "accuracy": 0.7696,
-      "macro_f1": 0.717,
+      "accuracy": 0.599,
+      "macro_f1": 0.4861,
       "per_class_f1": [
-        0.8558,
-        0.5397,
-        0.6151,
-        0.8575
+        0.7728,
+        0.3154,
+        0.3194,
+        0.5367
       ],
       "per_class_metrics": {
         "Low (0)": {
-          "precision": 0.8292,
-          "recall": 0.8842,
-          "f1": 0.8558,
+          "precision": 0.8122,
+          "recall": 0.737,
+          "f1": 0.7728,
           "support": 155450
         },
         "Medium (1)": {
-          "precision": 0.5796,
-          "recall": 0.5049,
-          "f1": 0.5397,
+          "precision": 0.3304,
+          "recall": 0.3018,
+          "f1": 0.3154,
           "support": 49256
         },
         "High (2)": {
-          "precision": 0.6171,
-          "recall": 0.6131,
-          "f1": 0.6151,
+          "precision": 0.3093,
+          "recall": 0.3302,
+          "f1": 0.3194,
           "support": 35363
         },
         "Critical (3)": {
-          "precision": 0.9265,
-          "recall": 0.7981,
-          "f1": 0.8575,
+          "precision": 0.4357,
+          "recall": 0.6988,
+          "f1": 0.5367,
           "support": 26946
         }
       },
       "confusion_matrix": [
         [
-          137449,
-          12333,
-          5309,
-          359
+          114571,
+          21272,
+          10515,
+          9092
         ],
         [
-          19461,
-          24867,
-          4688,
-          240
+          17956,
+          14863,
+          10394,
+          6043
         ],
         [
-          7424,
-          5153,
-          21680,
-          1106
+          6963,
+          7467,
+          11677,
+          9256
         ],
         [
-          1436,
-          550,
-          3455,
-          21505
+          1567,
+          1381,
+          5169,
+          18829
         ]
       ]
     }

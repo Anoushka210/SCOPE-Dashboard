@@ -5,16 +5,41 @@ import plotly.graph_objects as go
 
 def build_actor_network(df, top_n_actors=40, region_filter=None, crime_filter=None):
     """
-    Build a NetworkX graph of actor groups co-occurring with regions and crime types.
+    Build a NetworkX graph of genuine actor groups (from GTD & Cartel datasets) 
+    co-occurring with regions and crime types.
+    CRITICAL: Excludes ACLED disorder types (which are conflict classifications, not distinct groups).
     """
     filtered = df.copy()
     if region_filter and region_filter != 'All':
         filtered = filtered[filtered['region'] == region_filter]
     if crime_filter and crime_filter != 'All':
         filtered = filtered[filtered['crime_type'] == crime_filter]
-        
-    filtered = filtered[filtered['actor_group'].notna() & (filtered['actor_group'] != 'Unknown')]
+
+    # Filter out ACLED disorder types and generic unknowns
+    generic_non_actors = {
+        'Unknown', 'Unknown Group', 'Unspecified', 
+        'Armed Group/Civilian Disorder', 'Demonstrations', 
+        'Political violence', 'Political violence; Demonstrations',
+        'Civilian Disorder', 'Other'
+    }
+
+    actor_mask = (
+        filtered['source_dataset'].isin(['GTD', 'Cartel']) &
+        filtered['actor_group'].notna() &
+        ~filtered['actor_group'].isin(generic_non_actors)
+    )
+    filtered = filtered[actor_mask]
     
+    if filtered.empty:
+        # Fallback to any non-generic groups if filtered region has no GTD records
+        fallback_mask = (
+            filtered['actor_group'].notna() &
+            ~filtered['actor_group'].isin(generic_non_actors)
+        )
+        filtered = df[fallback_mask]
+        if region_filter and region_filter != 'All':
+            filtered = filtered[filtered['region'] == region_filter]
+
     top_actors = filtered['actor_group'].value_counts().head(top_n_actors).index.tolist()
     filtered = filtered[filtered['actor_group'].isin(top_actors)]
     
@@ -39,8 +64,8 @@ def build_actor_network(df, top_n_actors=40, region_filter=None, crime_filter=No
         else:
             G.add_edge(actor, region, weight=1)
             
-    deg_centrality = nx.degree_centrality(G)
-    bet_centrality = nx.betweenness_centrality(G)
+    deg_centrality = nx.degree_centrality(G) if len(G) > 0 else {}
+    bet_centrality = nx.betweenness_centrality(G) if len(G) > 0 else {}
     
     for n in G.nodes():
         G.nodes[n]['degree_centrality'] = round(deg_centrality.get(n, 0.0), 4)
@@ -50,7 +75,7 @@ def build_actor_network(df, top_n_actors=40, region_filter=None, crime_filter=No
 
 def get_network_plotly_figure(G):
     """
-    Generate an interactive Plotly figure from NetworkX graph optimized for Light Theme.
+    Generate an interactive Plotly figure from NetworkX graph.
     """
     if len(G.nodes) == 0:
         fig = go.Figure()

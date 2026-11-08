@@ -6,3 +6,6 @@ __pycache__/
 data/raw/
 data/processed/illicit_networks.csv
 data/temp_briefing_chart.png
+node_modules/
+frontend/dist/
+frontend/.env.production

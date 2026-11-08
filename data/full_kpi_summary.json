@@ -1,0 +1,41 @@
+{
+  "dataset_scope": "Full Multilateral Database (Precomputed from 1.18M raw records)",
+  "total_rows": 1186952,
+  "acled_event_expansion": {
+    "acled_row_count": 968024,
+    "acled_events_sum": 3109601,
+    "expansion_factor": 3.21,
+    "methodology": "ACLED aggregates weekly incidents into single cluster rows. Counting EVENTS column rather than rows expands 968,024 ACLED clusters into 3,109,601 real-world security occurrences."
+  },
+  "total_security_events": 3328529,
+  "total_fatalities_excludes_asam": 3074097,
+  "active_real_actor_groups": 3728,
+  "date_range_min": "1970-01-01",
+  "date_range_max": "2026-06-27",
+  "crime_breakdown_full": {
+    "Protests": 355617,
+    "Terrorism": 209706,
+    "Violence against civilians": 162203,
+    "Strategic developments": 131633,
+    "Battles": 128453,
+    "Riots": 97875,
+    "Explosions/Remote violence": 92243,
+    "Maritime Piracy": 9182,
+    "Cartel Violence": 40
+  },
+  "violent_crimes_total": 699702,
+  "violent_crimes_breakdown": {
+    "Terrorism": 209706,
+    "Violence against civilians": 162203,
+    "Battles": 128453,
+    "Riots": 97875,
+    "Explosions/Remote violence": 92243,
+    "Maritime Piracy": 9182,
+    "Cartel Violence": 40
+  },
+  "non_violent_crimes_total": 487250,
+  "non_violent_crimes_breakdown": {
+    "Protests": 355617,
+    "Strategic developments": 131633
+  }
+}

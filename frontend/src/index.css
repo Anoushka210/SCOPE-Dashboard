@@ -1,0 +1,127 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-main: #0a0f1e;
+    --bg-panel: #0d1b2a;
+    --accent-blue: #00d4ff;
+    --neon-green: #39ff14;
+    --amber-warning: #ff9500;
+    --critical-red: #ff3333;
+    --text-primary: #e2e8f0;
+    --text-secondary: #94a3b8;
+  }
+
+  body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+
+  h1, h2, h3, h4, h5, h6, .font-orbitron {
+    font-family: 'Orbitron', monospace, sans-serif;
+    letter-spacing: 0.05em;
+  }
+
+  .font-mono-numbers, .font-share-tech {
+    font-family: 'Share Tech Mono', monospace;
+  }
+}
+
+/* Sci-fi Glow & Border Utilities */
+.scifi-panel {
+  background-color: #0d1b2a;
+  border: 1px solid rgba(0, 212, 255, 0.25);
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.08);
+  border-radius: 0.5rem;
+  backdrop-filter: blur(8px);
+  transition: all 0.25s ease-in-out;
+}
+
+.scifi-panel:hover {
+  border-color: rgba(0, 212, 255, 0.45);
+  box-shadow: 0 0 22px rgba(0, 212, 255, 0.18);
+}
+
+.scifi-border-glow {
+  border: 1px solid rgba(0, 212, 255, 0.4);
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+}
+
+.text-electric-blue {
+  color: #00d4ff;
+}
+
+.text-neon-green {
+  color: #39ff14;
+}
+
+.text-amber-warning {
+  color: #ff9500;
+}
+
+.text-critical-red {
+  color: #ff3333;
+}
+
+/* Sci-fi Animated Grid Background */
+.scifi-grid-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  background-size: 50px 50px;
+  background-image: 
+    linear-gradient(to right, rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+  animation: gridMove 60s linear infinite;
+}
+
+@keyframes gridMove {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 50px 50px;
+  }
+}
+
+/* Scanline / Typewriter Effect */
+.scanline {
+  position: relative;
+  overflow: hidden;
+}
+
+.scanline::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 212, 255, 0.05) 50%);
+  background-size: 100% 4px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Custom Cyber Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0f1e;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 212, 255, 0.25);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 212, 255, 0.5);
+}

@@ -14,10 +14,11 @@ import xgboost as xgb
 import lightgbm as lgb
 import shap
 
-from utils.feature_engineering import build_feature_matrix
+from utils.feature_engineering import fit_feature_encoders, transform_feature_matrix
 
 MODELS_DIR = os.path.join(os.path.dirname(__file__), 'models')
 PROCESSED_DATA_PATH = os.path.join(os.path.dirname(__file__), 'data', 'processed', 'illicit_networks.csv')
+ENCODER_PATH = os.path.join(MODELS_DIR, 'feature_encoders.pkl')
 
 def train_and_evaluate_models():
     os.makedirs(MODELS_DIR, exist_ok=True)
@@ -27,27 +28,28 @@ def train_and_evaluate_models():
         
     print("Loading illicit_networks.csv...")
     df = pd.read_csv(PROCESSED_DATA_PATH, low_memory=False)
-    
-    print("Extracting features and severity targets...")
-    X, y = build_feature_matrix(df, is_training=True)
-    
-    years = X['year']
-    cutoff_year = int(years.quantile(0.80))
-    print(f"Time-based split cutoff year: {cutoff_year} (Train < {cutoff_year}, Test >= {cutoff_year})")
-    
-    train_mask = years < cutoff_year
-    test_mask = years >= cutoff_year
-    
-    if train_mask.sum() == 0 or test_mask.sum() == 0:
-        cutoff_year = years.max() - 1
-        train_mask = years < cutoff_year
-        test_mask = years >= cutoff_year
-        
-    X_train, y_train = X[train_mask], y[train_mask]
-    X_test, y_test = X[test_mask], y[test_mask]
-    
+    print(f"Total dataset records: {len(df):,}")
+
+    # Time-based split: Train < 2024, Test >= 2024
+    cutoff_year = 2024
+    train_df = df[df['year'] < cutoff_year].copy()
+    test_df = df[df['year'] >= cutoff_year].copy()
+    print(f"Time-based split: Train < {cutoff_year} ({len(train_df):,} samples), Test >= {cutoff_year} ({len(test_df):,} samples)")
+
+    # 1. Fit encoders ONLY on training split (no future leakage)
+    print("Fitting feature encoders on training split ONLY...")
+    encoders = fit_feature_encoders(train_df)
+    with open(ENCODER_PATH, 'wb') as f:
+        pickle.dump(encoders, f)
+    print(f"Encoders saved to {ENCODER_PATH}")
+
+    # 2. Transform train and test matrices
+    print("Transforming feature matrices (without target leakage)...")
+    X_train, y_train = transform_feature_matrix(train_df, encoders)
+    X_test, y_test = transform_feature_matrix(test_df, encoders)
     print(f"Train set shape: {X_train.shape}, Test set shape: {X_test.shape}")
-    
+    print("Feature columns:", X_train.columns.tolist())
+
     models = {
         'RandomForest': RandomForestClassifier(
             n_estimators=100, 
@@ -73,11 +75,11 @@ def train_and_evaluate_models():
             n_jobs=-1
         )
     }
-    
+
     results = {}
     fitted_models = {}
     class_names = ['Low (0)', 'Medium (1)', 'High (2)', 'Critical (3)']
-    
+
     for name, model in models.items():
         print(f"\n--- Training {name} ---")
         if name == 'XGBoost':
@@ -103,7 +105,8 @@ def train_and_evaluate_models():
             }
             
         print(f"{name} Results -> Accuracy: {acc:.4f}, Macro F1: {macro_f1:.4f}")
-        print(f"Critical Class (3) -> Precision: {prec[3]:.4f}, Recall: {rec[3]:.4f}, F1: {f1[3]:.4f}, Support: {sup[3]:,}")
+        for idx, c_name in enumerate(class_names):
+            print(f"  {c_name} -> Precision: {prec[idx]:.4f}, Recall: {rec[idx]:.4f}, F1: {f1[idx]:.4f}, Support: {sup[idx]:,}")
         
         results[name] = {
             'accuracy': round(acc, 4),
@@ -113,38 +116,39 @@ def train_and_evaluate_models():
             'confusion_matrix': cm
         }
         fitted_models[name] = model
-        
+
     best_model_name = max(results, key=lambda k: results[k]['macro_f1'])
     best_model = fitted_models[best_model_name]
-    print(f"\n🏆 Best Model selected by Macro F1: {best_model_name} (Macro F1 = {results[best_model_name]['macro_f1']:.4f})")
-    
+    print(f"\n🏆 Winning Model selected by Macro F1: {best_model_name} (Macro F1 = {results[best_model_name]['macro_f1']:.4f})")
+
     # Save winning model
     model_save_path = os.path.join(MODELS_DIR, 'incident_prediction.pkl')
     with open(model_save_path, 'wb') as f:
         pickle.dump(best_model, f)
     print(f"Serialized winning model saved to {model_save_path}")
-    
-    # Save extended metrics for ALL models
+
+    # Save extended honest metrics for ALL models
     metrics_path = os.path.join(MODELS_DIR, 'metrics.json')
     metrics_payload = {
         'winning_model': best_model_name,
         'cutoff_year': cutoff_year,
         'train_samples': int(len(X_train)),
         'test_samples': int(len(X_test)),
+        'leakage_status': 'REMOVED - Trained strictly on pre-incident operational indicators (fatalities, nkill, nwound, and EVENTS removed)',
         'critical_class_summary': {
             'test_support': results[best_model_name]['per_class_metrics']['Critical (3)']['support'],
             'precision': results[best_model_name]['per_class_metrics']['Critical (3)']['precision'],
             'recall': results[best_model_name]['per_class_metrics']['Critical (3)']['recall'],
             'f1': results[best_model_name]['per_class_metrics']['Critical (3)']['f1'],
-            'assessment': "Critical-class events achieve high precision (92.65%) and strong recall (79.81%) across 26,946 test samples. Medium and High classes show lower recall (50-61%) due to boundary overlap."
+            'assessment': f"Leakage-free evaluation across {len(X_test):,} held-out test events (2024+). Macro F1: {results[best_model_name]['macro_f1']:.4f}."
         },
         'models': results
     }
     with open(metrics_path, 'w') as f:
         json.dump(metrics_payload, f, indent=2)
     print(f"Extended metrics saved to {metrics_path}")
-    
-    # Generate SHAP summary plot
+
+    # Generate SHAP summary plot for winning model
     print("Generating SHAP summary plot for winning model...")
     try:
         sample_size = min(500, len(X_test))
@@ -168,6 +172,6 @@ def train_and_evaluate_models():
         print(f"SHAP summary plot saved to {shap_img_path}")
     except Exception as e:
         print(f"Warning: Error generating SHAP plot: {e}")
-        
+
 if __name__ == '__main__':
     train_and_evaluate_models()
